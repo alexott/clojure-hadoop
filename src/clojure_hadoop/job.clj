@@ -139,18 +139,25 @@
     (SequenceFileOutputFormat/setOutputCompressionType
      SequenceFile$CompressionType/BLOCK)))
 
+(defn- run-hadoop-job
+  "Run a hadoop job and wait for completion.
+   Params are a hadoop Tool instance and a configuration function that should accept a single hadoop Job parameter.
+   The config function will be called with the current job once the default params have been set."
+  [tool job-config-fn]
+  (let [config (.getConf tool)]
+    (doto (Job. config)
+      (.setJarByClass (.getClass tool))
+      (set-default-config)
+      (job-config-fn)
+      (handle-replace-option)
+      (.waitForCompletion true))))
+
 (defn run
   "Runs a Hadoop job given the job configuration map/fn."
   ([job]
-     (run (clojure_hadoop.job.) job))
-  ([tool job]     
-     (let [config (.getConf tool)]
-       (doto (Job. config)
-        (.setJarByClass (.getClass tool))
-        (set-default-config)
-        (config/conf :job job)
-        (handle-replace-option)
-        (.waitForCompletion true)))))
+     (run (clojure_hadoop.job.) job))  		    
+  ([tool job]
+     (run-hadoop-job tool #(config/conf % :job job))))
 
 ;;; TOOL METHODS
 
@@ -158,9 +165,5 @@
 (gen/gen-main-method)
 
 (defn tool-run [^Tool this args]
-  (doto (Job. (.getConf this))
-    (.setJarByClass (.getClass this))
-    (set-default-config)
-    (parse-command-line args)
-    (run))
+  (run-hadoop-job this #(parse-command-line % args))
   0)
