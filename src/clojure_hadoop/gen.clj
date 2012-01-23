@@ -19,7 +19,7 @@
 
   The third function, tool-run, will be called by the Hadoop framework
   to start your job, with the arguments from the command line.  It
-  should set up the JobConf object and call JobClient/runJob, then
+  should set up the Job object and call JobClient/runJob, then
   return zero on success.
 
   You must also call gen-main-method to create the main method.

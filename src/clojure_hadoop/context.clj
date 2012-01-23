@@ -1,10 +1,9 @@
 (ns clojure-hadoop.context
-  (:use [clojure.contrib.def :only (defvar)]
-        [clojure-hadoop.imports :only (import-mapreduce)]))
+  (:use [clojure-hadoop.imports :only (import-mapreduce)]))
 
 (import-mapreduce)
 
-(defvar ^TaskInputOutputContext *context* nil)
+(def ^TaskInputOutputContext ^:dynamic *context* nil)
 
 (defn get-counter
   "Returns a counter by group and name."

@@ -3,10 +3,10 @@
             [clojure-hadoop.imports :as imp]
             [clojure-hadoop.wrap :as wrap]
             [clojure-hadoop.config :as config]
-            [clojure-hadoop.load :as load])
+            [clojure-hadoop.load :as load]
+	    [clojure.stacktrace])
   (:import (org.apache.hadoop.util Tool))
-  (:use [clojure.contrib.def :only (defvar-)]
-        [clojure-hadoop.config :only (configuration)]
+  (:use [clojure-hadoop.config :only (configuration)]
         [clojure-hadoop.context :only (with-context)]))
 
 (imp/import-conf)
@@ -16,21 +16,21 @@
 (imp/import-mapreduce)
 (imp/import-mapreduce-lib)
 
-(def ^Configuration *config* nil)
+(def ^Configuration ^:dynamic *config* nil)
 
 (gen/gen-job-classes)
 
-(defvar- method-fn-name
+(def ^{:private true} method-fn-name
   {"map" "mapper-map"
    "reduce" "reducer-reduce"
    "combine" "combiner-reduce"})
 
-(defvar- wrapper-fn
+(def ^{:private true} wrapper-fn
   {"map" wrap/wrap-map
    "reduce" wrap/wrap-reduce
    "combine" wrap/wrap-reduce})
 
-(defvar- default-reader
+(def ^{:private true} default-reader
   {"map" wrap/clojure-map-reader
    "reduce" wrap/clojure-reduce-reader
    "combine" wrap/clojure-reduce-reader})
@@ -58,11 +58,11 @@
 
 ;;; CREATING AND CONFIGURING JOBS
 
-(defn- parse-command-line [job args]
+(defn parse-command-line [job args]
   (try
     (config/parse-command-line-args job args)
     (catch Exception e
-      (prn e)
+      (clojure.stacktrace/print-cause-trace e)
       (config/print-usage)
       (System/exit 1))))
 
@@ -139,23 +139,57 @@
     (SequenceFileOutputFormat/setOutputCompressionType
      SequenceFile$CompressionType/BLOCK)))
 
-(defn- run-hadoop-job
+;;
+;; Override name and class if needed
+;;
+
+(def ^:dynamic *job-customization* nil)
+
+(defmacro with-job-customization
+  "This binding macro allows us to de-couple the library jar that
+   clojure-hadoop is in from the jar that hosts the application logic
+   for situations where we are not building uberjars and have
+   libraries on the distributed cache classpath :name sets the
+   job name and :jar-class is used to set the classpath"
+  [map & body]
+  (assert (map? map))
+  `(binding [*job-customization* ~map]
+     ~@body))
+
+(defn- job-name []
+  (or (:name *job-customization*) "clojure-hadoop.job"))
+
+(defn- jar-class [default]
+  (or (:jar-class *job-customization*) default))
+
+;;
+;; Allow wait-for-completion as well as a batch submission based on config
+;;
+
+(defn- submit-job [#^Job job]
+  (handle-replace-option job)
+  (let [batch?  (= "true" (.get (configuration job) "clojure-hadoop.job.batch"))]
+    (if batch?
+      (.submit job)
+      (.waitForCompletion job true))))
+
+(defn run-hadoop-job
   "Run a hadoop job and wait for completion.
    Params are a hadoop Tool instance and a configuration function that should accept a single hadoop Job parameter.
    The config function will be called with the current job once the default params have been set."
   [tool job-config-fn]
   (let [config (.getConf tool)]
     (doto (Job. config)
-      (.setJarByClass (.getClass tool))
+      (.setJarByClass (jar-class (.getClass tool)))
+      (.setJobName (job-name))
       (set-default-config)
       (job-config-fn)
-      (handle-replace-option)
-      (.waitForCompletion true))))
+      (submit-job))))
 
 (defn run
   "Runs a Hadoop job given the job configuration map/fn."
   ([job]
-     (run (clojure_hadoop.job.) job))  		    
+     (run (clojure_hadoop.job.) job))
   ([tool job]
      (run-hadoop-job tool #(config/conf % :job job))))
 
