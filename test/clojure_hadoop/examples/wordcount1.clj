@@ -41,8 +41,8 @@
   "This is our implementation of the Mapper.map method.  The key and
   value arguments are sub-classes of Hadoop's Writable interface, so
   we have to convert them to strings or some other type before we can
-  use them.  Likewise, we have to call the OutputCollector.collect
-  method with objects that are sub-classes of Writable."
+  use them.  Likewise, we have to call the Context.collect method with
+  objects that are sub-classes of Writable."
   [this key value ^MapContext context]
   (doseq [word (enumeration-seq (StringTokenizer. (str value)))]
     (.write context (Text. word) (LongWritable. 1))))
@@ -66,7 +66,7 @@
 (defn tool-run
   "This is our implementation of the Tool.run method.  args are the
   command-line arguments as a Java array of strings.  We have to
-  create a JobConf object, set all the MapReduce job parameters, then
+  create a Job object, set all the MapReduce job parameters, then
   call the JobClient.runJob static method on it.
 
   This method must return zero on success or Hadoop will report that

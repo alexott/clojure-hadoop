@@ -5,19 +5,14 @@
             :url "http://opensource.org/licenses/eclipse-1.0.php"
             :distribution "repo"
             :comments "Same license as Clojure"}
-  :repositories {"apache" { :url "https://repository.apache.org/content/repositories/releases/"
-                           :snapshots false
-                           :releases {:checksum :fail :update :always}}
-                 }
   :dependencies [[org.clojure/clojure "1.3.0"]
-                 [org.apache.hadoop/hadoop-core "0.20.205.0"]
-                 [org.codehaus.jackson/jackson-mapper-asl "1.9.2"]
+                 [org.apache.hadoop/hadoop-core "1.0.0"]
                  [log4j/log4j "1.2.16" :exclusions [javax.mail/mail
                                                     javax.jms/jms
                                                     com.sun.jdmk/jmxtools
                                                     com.sun.jmx/jmxri]]
                  ]
-  :dev-dependencies [[swank-clojure "1.3.4"]]
+  :dev-dependencies [[swank-clojure "1.4.0"]]
   :aot [clojure-hadoop.config
         clojure-hadoop.defjob
         clojure-hadoop.gen

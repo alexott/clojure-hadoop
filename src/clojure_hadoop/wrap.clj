@@ -30,7 +30,7 @@ Clojure jobs."
    (fn [] (map (fn [^Writable v] (read-string (.toString v))) wvalues))])
 
 (defn clojure-writer
-  "Sends key and value to the OutputCollector by calling pr-str on key
+  "Sends key and value to the Context by calling pr-str on key
   and value and wrapping them in Hadoop Text objects."
   [^TaskInputOutputContext context key value]
   (binding [*print-dup* true]
@@ -50,8 +50,7 @@ Clojure jobs."
   Hadoop and returns a [key value] pair for f.
 
   writer is a function that receives each [key value] pair returned by
-  f and sends the appropriately-type arguments to the Hadoop
-  OutputCollector.
+  f and sends the appropriately-type arguments to the Hadoop Context.
 
   If not given, reader and writer default to clojure-map-reader and
   clojure-writer, respectively."
@@ -79,8 +78,7 @@ Clojure jobs."
   Hadoop and returns a [key values-function] pair for f.
 
   writer is a function that receives each [key value] pair returned by
-  f and sends the appropriately-typed arguments to the Hadoop
-  OutputCollector.
+  f and sends the appropriately-typed arguments to the Hadoop Context.
 
   If not given, reader and writer default to clojure-reduce-reader and
   clojure-writer, respectively."
