@@ -24,13 +24,13 @@
 ;; functions such as map, filter, or reduce.
 ;;
 ;; To run this example, first compile it (see instructions in
-;; README.txt), then run this command (all one line):
+;; README.md), then run this command (all one line):
 ;;
 ;;   java -cp examples.jar \
 ;;        clojure_hadoop.examples.wordcount2 \
-;;        README.txt out2
+;;        README.md out2
 ;;
-;; This will count the instances of each word in README.txt and write
+;; This will count the instances of each word in README.md and write
 ;; the results to out2/part-00000
 ;;
 ;; Notice that, in the output file, the words are enclosed in double
@@ -39,9 +39,9 @@
 
 
 (ns clojure-hadoop.examples.wordcount2
-  (:require [clojure-hadoop.gen :as gen]
+  (:require [clojure-hadoop.gen     :as gen]
             [clojure-hadoop.imports :as imp]
-            [clojure-hadoop.wrap :as wrap])
+            [clojure-hadoop.wrap    :as wrap])
   (:import (java.util StringTokenizer)
            (org.apache.hadoop.util Tool))
   (:use clojure.test))
@@ -82,6 +82,6 @@
     (.waitForCompletion true))
   0)
 
-(deftest test-wordcount-2  
+(deftest test-wordcount-2
   (.delete (FileSystem/get (Configuration.)) (Path. "tmp/out2") true)
-  (is (tool-run (clojure_hadoop.job.) ["README.txt" "tmp/out2"])))
+  (is (tool-run (clojure_hadoop.job.) ["test-resources/to_be_counted.txt" "tmp/out2"])))

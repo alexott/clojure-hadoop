@@ -8,11 +8,11 @@
 ;; library, which allows you to run a MapReduce job that can be
 ;; configured to use any Clojure functions as the mapper and reducer.
 ;;
-;; After compiling (see README.txt), run the example like this
+;; After compiling (see README.md), run the example like this
 ;; (all on one line):
 ;;
 ;;   java -cp examples.jar clojure_hadoop.job \
-;;        -input README.txt \
+;;        -input README.md \
 ;;        -output out3 \
 ;;        -map clojure-hadoop.examples.wordcount3/my-map \
 ;;        -map-reader clojure-hadoop.wrap/int-string-map-reader \
@@ -39,7 +39,7 @@
 ;; symbol.
 ;;
 ;; We also have to specify the input and output paths, and specify the
-;; non-default input-format as 'text', because README.txt is a text
+;; non-default input-format as 'text', because README.md is a text
 ;; file.
 ;;
 ;; Run clojure_hadoop.job without any arguments for a brief summary of
@@ -62,12 +62,12 @@
   [[key (reduce + (values-fn))]])
 
 (deftest test-wordcount-3
-  (is (run 
+  (is (run
        {:map "clojure-hadoop.examples.wordcount3/my-map"
         :map-reader "clojure-hadoop.wrap/int-string-map-reader"
         :combine "clojure-hadoop.examples.wordcount3/my-combine"
         :reduce "clojure-hadoop.examples.wordcount3/my-reduce"
         :input-format "text"
-        :input "README.txt"
+        :input "test-resources/to_be_counted.txt"
         :output "tmp/out3"
         :replace "true"})))
