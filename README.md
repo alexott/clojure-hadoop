@@ -102,7 +102,7 @@ This will compile and build the JAR file.
 ###Dependencies
 
 * [Java 6 JDK](http://java.sun.com/)
-* [Hadoop core]()
+* [Hadoop core](http://hadoop.apache.org/releases.html)
 * [Leiningen](http://github.com/technomancy/leiningen)
 
 
