@@ -11,10 +11,11 @@
                                                     com.sun.jdmk/jmxtools
                                                     com.sun.jmx/jmxri]]]
 
+  :min-lein-version "2.0.0"
   :profiles {:0.20.2 {:dependencies [[org.apache.hadoop/hadoop-core "0.20.2"]]}
-             :1.0.3  {:dependencies [[org.apache.hadoop/hadoop-core "1.0.3"]]}}
+             :1.0.3  {:dependencies [[org.apache.hadoop/hadoop-core "1.0.3"]]}
+             :dev    {:dependencies [[swank-clojure "1.4.2"]]}}
 
-  :dev-dependencies [[swank-clojure "1.4.2"]]
   :aot [clojure-hadoop.config
         clojure-hadoop.defjob
         clojure-hadoop.gen
