@@ -54,7 +54,7 @@
    '(org.apache.hadoop.fs
      PathFilter PositionedReadable Seekable Syncable BlockLocation
      BufferedFSInputStream ChecksumFileSystem ContentSummary DF DU
-     FileStatus FileSystem FileSystem$Statistics FileUtil HardLink
+     FileStatus FileSystem FileSystem$Statistics FileUtil
      FilterFileSystem FSDataInputStream FSDataOutputStream FSInputChecker
      FSInputStream FSOutputSummer FsShell FsUrlStreamHandlerFactory HarFileSystem
      InMemoryFileSystem LocalDirAllocator LocalFileSystem Path RawLocalFileSystem
