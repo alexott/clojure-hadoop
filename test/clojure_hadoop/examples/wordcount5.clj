@@ -11,12 +11,12 @@
 ;; define custom reader and writer functions, and specify the output
 ;; key/value types in the defjob configuration.
 ;;
-;; After compiling (see README.txt), run the example like this
+;; After compiling (see README.md), run the example like this
 ;; (all on one line):
 ;;
 ;;   java -cp examples.jar clojure_hadoop.job \
 ;;        -job clojure-hadoop.examples.wordcount5/job \
-;;        -input README.txt -output out5
+;;        -input README.md -output out5
 ;;
 ;; The output is plain text, written to out5/part-00000
 ;;
@@ -27,8 +27,8 @@
 
 
 (ns clojure-hadoop.examples.wordcount5
-  (:require [clojure-hadoop.wrap :as wrap]
-            [clojure-hadoop.defjob :as defjob]
+  (:require [clojure-hadoop.wrap    :as wrap]
+            [clojure-hadoop.defjob  :as defjob]
             [clojure-hadoop.imports :as imp])
   (:import (java.util StringTokenizer))
   (:use clojure.test clojure-hadoop.job))
@@ -61,7 +61,7 @@
   :input-format :text
   :output-format :text
   :compress-output false
-  :input "README.txt"
+  :input "test-resources/to_be_counted.txt"
   :output "tmp/out5"
   :replace true)
 

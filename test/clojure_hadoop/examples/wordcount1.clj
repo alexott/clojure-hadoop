@@ -11,18 +11,18 @@
 ;; three functions mapper-map, reducer-reduce, and tool-run.
 ;;
 ;; To run this example, first compile it (see instructions in
-;; README.txt), then run this command (all one line):
+;; README.md), then run this command (all one line):
 ;;
 ;;   java -cp examples.jar \
 ;;        clojure_hadoop.examples.wordcount1 \
-;;        README.txt out1
+;;        README.md out1
 ;;
-;; This will count the instances of each word in README.txt and write
+;; This will count the instances of each word in README.md and write
 ;; the results to out1/part-00000
 
 
 (ns clojure-hadoop.examples.wordcount1
-  (:require [clojure-hadoop.gen :as gen]
+  (:require [clojure-hadoop.gen     :as gen]
             [clojure-hadoop.imports :as imp])
   (:import (java.util StringTokenizer)
            (org.apache.hadoop.util Tool))
@@ -32,7 +32,7 @@
 (imp/import-fs)
 (imp/import-io)
 (imp/import-mapreduce)
-(imp/import-mapreduce-lib) 
+(imp/import-mapreduce-lib)
 
 (gen/gen-job-classes)  ;; generates Tool, Mapper, and Reducer classes
 (gen/gen-main-method)  ;; generates Tool.main method
@@ -80,7 +80,7 @@
     (.setMapperClass (Class/forName "clojure_hadoop.examples.wordcount1_mapper"))
     (.setReducerClass (Class/forName "clojure_hadoop.examples.wordcount1_reducer"))
     (.setInputFormatClass TextInputFormat)
-    (.setOutputFormatClass TextOutputFormat)    
+    (.setOutputFormatClass TextOutputFormat)
     (FileInputFormat/setInputPaths (first args))
     (FileOutputFormat/setOutputPath (Path. (second args)))
     (.waitForCompletion true))
@@ -88,4 +88,4 @@
 
 (deftest test-wordcount-1
   (.delete (FileSystem/get (Configuration.)) (Path. "tmp/out1") true)
-  (is (tool-run (clojure_hadoop.job.) ["README.txt" "tmp/out1"])))
+  (is (tool-run (clojure_hadoop.job.) ["test-resources/to_be_counted.txt" "tmp/out1"])))

@@ -13,12 +13,12 @@
 ;; clojure_hadoop.job, adding or overriding any additional arguments
 ;; at the command line.
 ;;
-;; After compiling (see README.txt), run the example like this
+;; After compiling (see README.md), run the example like this
 ;; (all on one line):
 ;;
 ;;   java -cp examples.jar clojure_hadoop.job \
 ;;        -job clojure-hadoop.examples.wordcount4/job \
-;;        -input README.txt -output out4
+;;        -input README.md -output out4
 ;;
 ;; The output is a Hadoop SequenceFile.  You can view the output
 ;; with (all one line):
@@ -28,7 +28,7 @@
 
 
 (ns clojure-hadoop.examples.wordcount4
-  (:require [clojure-hadoop.wrap :as wrap]
+  (:require [clojure-hadoop.wrap   :as wrap]
             [clojure-hadoop.defjob :as defjob])
   (:import (java.util StringTokenizer))
   (:use clojure.test clojure-hadoop.job))
@@ -45,7 +45,7 @@
   :map-reader wrap/int-string-map-reader
   :reduce my-reduce
   :input-format :text
-  :input "README.txt"
+  :input "test-resources/to_be_counted.txt"
   :output "tmp/out4"
   :replace true)
 
