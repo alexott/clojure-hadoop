@@ -1,4 +1,4 @@
-(defproject clojure-hadoop "1.4.1"
+(defproject clojure-hadoop "1.4.2"
   :description "Library to aid writing Hadoop jobs in Clojure."
   :url "http://github.com/alexott/clojure-hadoop"
   :license {:name "Eclipse Public License 1.0"
