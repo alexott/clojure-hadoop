@@ -72,6 +72,15 @@
      Reducer StatusReporter TaskAttemptContext TaskAttemptID TaskID
      TaskInputOutputContext)))
 
+(defn import-filecache
+  "Imports all classes/interfaces/exceptions from the package
+  org.apache.hadoop.filecache into the current namespace."
+  []
+  (import
+   '(org.apache.hadoop.filecache
+     DistributedCache TaskDistributedCacheManager
+     TrackerDistributedCacheManager)))
+
 (defn import-mapreduce-lib-input
   "Imports all classes/interfaces/exceptions from the package
   org.apache.hadoop.mapreduce.lib.input into the current namespace."

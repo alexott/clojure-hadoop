@@ -131,6 +131,14 @@ Layer 5: clojure-hadoop.defjob
     See the example files "wordcount4.clj" and "wordcount5.clj" for
     demonstrations of this macro.
 
+ Layer 7: clojure-hadoop.config - Adding files and archives 
+to the DistributedCache.
+    
+    Example file "wordcount7.clj" demonstrates how to specify files
+    and archives for distribution to across nodes via the 
+    DistributedCache, as well as how to access the files 
+    during the mapper-setup or reducer-setup phases.
+
 
 NOTES
 

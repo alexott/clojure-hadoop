@@ -1,7 +1,8 @@
 (ns clojure-hadoop.config
   (:require [clojure-hadoop.imports :as imp]
             [clojure-hadoop.load :as load]
-            [clojure.string :as str]))
+            [clojure.string :as str])
+  (:import [java.net URI]))
 
 ;; This file defines configuration options for clojure-hadoop.
 ;;
@@ -23,6 +24,7 @@
 (imp/import-fs)
 (imp/import-mapreduce)
 (imp/import-mapreduce-lib)
+(imp/import-filecache)
 
 (def combine-cleanup
   "The name of the property that stores the cleanup function name of
@@ -80,9 +82,12 @@
 (defmethod conf :params [^Job job key params]
   (set-parameters job (var-get (resolve (read-string params)))))
 
+(defn- sequentialify [thing-or-things]
+  (if (sequential? thing-or-things) thing-or-things (list thing-or-things)))
+
 ;; Modify the job or configuration
 (defmethod conf :configure [^Job job key fnames]
-  (doseq [fname (if (sequential? fnames) fnames (list fnames))]
+  (doseq [fname (sequentialify fnames)]
     (if (fn? fname)
       (fname job)
       ((load/load-name fname) job))))
@@ -306,6 +311,16 @@
      (SequenceFileOutputFormat/setOutputCompressionType
       job SequenceFile$CompressionType/RECORD))))
 
+(defmethod conf :add-cache-archive [^Job job key value]
+  (doseq [archive-path-string (sequentialify (load/load-or-value value))]
+      (DistributedCache/addCacheArchive (URI. archive-path-string)
+                                        (configuration job))))
+
+(defmethod conf :add-cache-file [^Job job key value]
+  (doseq [file-path-string (sequentialify (load/load-or-value value))]
+    (DistributedCache/addCacheFile (URI. file-path-string)
+                                   (configuration job))))
+
 
 (defmethod conf :batch [^Job job key value]
   (let [val (as-str value)]
@@ -362,4 +377,8 @@ Other available options are:
  -output-compressor Compression class or \"gzip\",\"bzip2\",\"default\"
  -compression-type  For seqfiles, compress \"block\",\"record\",\"none\"
  -batch             If \"false\" (default), run interactively, else 'submit'
+ -add-cache-archive A URI referencing an archive to add to the DistributedCache
+                    Can be specified multiple times.
+ -add-cache-file    A URI referencing a file to add to the DistributedCache
+                    Can be specified multiple times.
 "))

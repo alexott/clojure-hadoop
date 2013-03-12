@@ -10,3 +10,11 @@
       (require (symbol ns-name)))
     (assert (find-ns (symbol ns-name)))
     (deref (resolve (symbol ns-name fn-name)))))
+
+(defn load-or-value
+  "If the value provided is something that can be loaded,
+   it will; otherwise returns the value passed in."
+  [^String s]
+  (if (resolve (symbol s))
+    (load-name s)
+    s))
