@@ -12,6 +12,7 @@
                                                     com.sun.jdmk/jmxtools
                                                     com.sun.jmx/jmxri]]
                  ]
+  :source-paths ["src" "test"]
   :dev-dependencies [[swank-clojure "1.4.2"]]
   :aot [clojure-hadoop.config
         clojure-hadoop.defjob

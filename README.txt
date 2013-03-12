@@ -131,6 +131,17 @@ Layer 5: clojure-hadoop.defjob
     See the example files "wordcount4.clj" and "wordcount5.clj" for
     demonstrations of this macro.
 
+Layer 6: clojure-hadoop.defjob - Specifying JobConf parameters 
+
+    Often its necessary to specify parameters in the job's 
+    configuration to in order to enable dynamic map/reduce jobs.
+    Hadoop natively enables this through the -D<key>=<value>
+    commandline specification.
+   
+    Using the convenient defjob macro, "wordcount6.clj" demonstrates
+    how to set job configuration (JobConf) parameters either via
+    the commandline, or as part of the defjob defintion within the file.
+
 
 NOTES
 

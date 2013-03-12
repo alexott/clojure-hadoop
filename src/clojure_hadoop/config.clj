@@ -64,7 +64,21 @@
   "Returns the configuration for the job."
   [^Job job] (.getConfiguration job))
 
-(defmulti conf (fn [job key value] key))
+(defn- commandline-job-conf-param? [key]
+  (= (first (as-str key)) \X))
+
+(defmulti conf
+  (fn [job key value]
+    (or (and (commandline-job-conf-param? key) :X)
+        key)))
+  
+;; allow users to specify parameters via the commandline
+;; to set in the job's configuration  
+;; e.g. -Xmy.foo.value myfoovalue
+;; would yield
+;; (.set (configuration job) "my.foo.value" "myfoovalue")
+(defmethod conf :X [^Job job key value]
+  (.set (configuration job) (subs (as-str key) 1) value))
 
 (defmethod conf :job [^Job job key value]
   (cond
@@ -77,6 +91,9 @@
   (doseq [[param value] params]
     (.set (configuration job) param value)))
 
+;; If you specify your parameters as a map bound to a var
+;; you can specify the name of the var with the :params
+;; to load the key-value pairs in the configuration.
 (defmethod conf :params [^Job job key params]
   (set-parameters job (var-get (resolve (read-string params)))))
 
@@ -362,4 +379,7 @@ Other available options are:
  -output-compressor Compression class or \"gzip\",\"bzip2\",\"default\"
  -compression-type  For seqfiles, compress \"block\",\"record\",\"none\"
  -batch             If \"false\" (default), run interactively, else 'submit'
+ -X<key> <val>      Can specify an arbitrary number of key-value pairs to
+                    add to the Job's Configuration by repeating
+                    -X<key1> <val1> -X<key2> <val2> ... -X<keyN> <valN>
 "))
