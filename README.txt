@@ -150,7 +150,6 @@ to the DistributedCache.
     DistributedCache, as well as how to access the files 
     during the mapper-setup or reducer-setup phases.
 
-
 NOTES
 
 * README.txt changed to reflect the Leiningen build process (Roman Scherer).

@@ -6,7 +6,7 @@
             :distribution "repo"
             :comments "Same license as Clojure"}
   :dependencies [[org.clojure/clojure "1.3.0"]
-                 [org.apache.hadoop/hadoop-core "1.0.3"]
+                 [org.apache.hadoop/hadoop-core "1.0.4"]
                  ;; commons-io was omitted in 1.0.3/1.0.4
                  ;; needs to be explicitly included
                  ;; until this is resolved.                 
@@ -16,6 +16,7 @@
                                                     javax.jms/jms
                                                     com.sun.jdmk/jmxtools
                                                     com.sun.jmx/jmxri]]]
+  :source-paths ["src" "test"]
   :dev-dependencies [[swank-clojure "1.4.2"]]
   :aot [clojure-hadoop.config
         clojure-hadoop.defjob
