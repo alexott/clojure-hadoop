@@ -23,9 +23,8 @@
                        (assoc m k
                               (cond (keyword? v) (name v)
                                     (number? v) (str v)
-                                    (string? v) v
                                     (symbol? v) (full-name v)
                                     (instance? Boolean v) (str v)
-                                    :else (throw (Exception. "defjob arguments must be strings, symbols, or keywords")))))
+                                    :else v)))
                      {} (apply hash-map opts))]
-    `(defn ~sym [] ~args)))
+    `(def ~sym (constantly ~args))))

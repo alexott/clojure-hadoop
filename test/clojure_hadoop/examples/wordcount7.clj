@@ -191,7 +191,7 @@
   :output-format :text
   :compress-output false
   :input "README.txt"
-  :output "tmp/out7"
+  :output (str "tmp/out" 7)
   :replace true
   :add-cache-file files-for-distributed-cache)
   

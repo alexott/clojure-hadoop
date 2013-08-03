@@ -1,5 +1,8 @@
 (ns clojure-hadoop.test.config
-  (:use clojure.test clojure-hadoop.config clojure-hadoop.imports))
+  (:use clojure.test
+        clojure-hadoop.config
+        clojure-hadoop.imports
+        clojure-hadoop.defjob))
 
 (import-conf)
 (import-fs)
@@ -227,3 +230,10 @@
 (deftest test-print-usage
   (let [out (with-out-str (print-usage))]
     (is (re-find #"Usage.*" out))))
+
+(deftest test-defjob-creates-constant-configs
+  (defjob my-job
+    :timestamp (System/currentTimeMillis))
+  (let [job-conf (my-job)]
+    (Thread/sleep 20)
+    (is (= job-conf (my-job)))))
